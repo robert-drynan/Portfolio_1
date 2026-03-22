@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio | Robert Drynan</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #0f0f18;
+    --bg3: #13131e;
+    --surface: #1a1a2e;
+    --surface2: #1f1f35;
+    --accent: #00d4ff;
+    --accent2: #7b5ea7;
+    --accent3: #00ff9d;
+    --text: #e8e8f0;
+    --text-muted: #7a7a9a;
+    --text-dim: #4a4a6a;
+    --border: rgba(0, 212, 255, 0.12);
+    --glow: 0 0 30px rgba(0, 212, 255, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .nav-logo span { color: var(--text-muted); }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 8rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4rem;
+    align-items: center;
+  }
+  .hero-photo-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards 0.3s;
+  }
+  .headshot-wrapper {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    flex-shrink: 0;
+  }
+  .headshot-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    z-index: 0;
+  }
+  .headshot-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: var(--bg);
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    z-index: 1;
+  }
+  .headshot-wrapper img {
+    position: absolute;
+    inset: 6px;
+    width: calc(100% - 12px);
+    height: calc(100% - 12px);
+    object-fit: cover;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    z-index: 2;
+  }
+  .headshot-glow {
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(ellipse at center, rgba(0,212,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards 0.2s;
+  }
+  .hero-tag::before { content: '> '; color: var(--accent2); }
+  .hero-name {
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards 0.4s;
+  }
+  .hero-name .first { color: var(--text); }
+  .hero-name .last {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--accent);
+  }
+  .hero-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards 0.6s;
+  }
+  .hero-title .highlight { color: var(--accent3); }
+  .hero-desc {
+    max-width: 560px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards 0.8s;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards 1s;
+  }
+  .btn-primary {
+    padding: 0.85rem 2rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    background: var(--accent3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,212,255,0.3);
+  }
+  .btn-outline {
+    padding: 0.85rem 2rem;
+    background: transparent;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    display: inline-block;
+  }
+  .btn-outline:hover {
+    background: rgba(0,212,255,0.1);
+    transform: translateY(-2px);
+  }
+
+  /* SECTION HEADERS */
+  .section-header { margin-bottom: 3.5rem; }
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+  .section-tag::before { content: '// '; color: var(--text-dim); }
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .about-text p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .about-text p strong { color: var(--accent); font-weight: 600; }
+  .philosophy-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 2rem;
+    margin-top: 2rem;
+    position: relative;
+  }
+  .philosophy-box::before {
+    content: '"';
+    position: absolute;
+    top: -1rem; left: 1.5rem;
+    font-size: 4rem;
+    color: var(--accent);
+    line-height: 1;
+    font-family: Georgia, serif;
+  }
+  .philosophy-box p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    font-style: italic;
+  }
+  .philosophy-box .attr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    font-style: normal;
+  }
+  .interests-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+  }
+  .interest-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .interest-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.8rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .skill-card:hover::before { transform: scaleX(1); }
+  .skill-card:hover { border-color: rgba(0,212,255,0.3); transform: translateY(-4px); }
+  .skill-card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .skill-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 0.35rem 0.75rem;
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.15);
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+  }
+
+  /* TIMELINE */
+  .timeline { position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  .timeline-item {
+    padding-left: 2.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -4px; top: 6px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+  .timeline-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+  }
+  .timeline-role {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+  .timeline-org {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent2);
+    margin-bottom: 0.9rem;
+  }
+  .timeline-bullets { list-style: none; }
+  .timeline-bullets li {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    padding-left: 1.2rem;
+    position: relative;
+    margin-bottom: 0.3rem;
+  }
+  .timeline-bullets li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent3);
+    font-size: 0.8rem;
+  }
+
+  /* EDUCATION */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    transition: all 0.3s;
+  }
+  .edu-card:hover {
+    border-color: rgba(123,94,167,0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(123,94,167,0.1);
+  }
+  .edu-degree { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+  .edu-school { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent2); margin-bottom: 0.4rem; }
+  .edu-date { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 0.9rem; }
+  .edu-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.3rem 0.7rem;
+    background: rgba(0,255,157,0.08);
+    border: 1px solid rgba(0,255,157,0.2);
+    color: var(--accent3);
+    letter-spacing: 0.05em;
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .project-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent3), var(--accent));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .project-card:hover::after { transform: scaleX(1); }
+  .project-card:hover { transform: translateY(-5px); border-color: rgba(0,255,157,0.2); }
+  .project-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+  }
+  .project-title { font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; }
+  .project-desc { font-size: 0.9rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 1.5rem; flex-grow: 1; }
+  .project-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .stack-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.12);
+    color: var(--accent);
+  }
+  .project-footer {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  .btn-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+  }
+  .btn-github:hover {
+    color: var(--text);
+    border-color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-1px);
+  }
+  .btn-github svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
+
+  /* CAPSTONE */
+  .capstone-card {
+    background: var(--surface);
+    border: 1px solid rgba(0,255,157,0.2);
+    padding: 2.5rem;
+    position: relative;
+  }
+  .capstone-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent3), var(--accent), var(--accent2));
+  }
+  .capstone-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .capstone-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .capstone-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .capstone-section {
+    background: rgba(0,212,255,0.03);
+    border: 1px solid var(--border);
+    padding: 1.25rem;
+  }
+  .capstone-section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .capstone-section p { font-size: 0.87rem; line-height: 1.7; color: var(--text-muted); }
+
+  /* COVER LETTER */
+  .cover-letter-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 3rem;
+    position: relative;
+  }
+  .cover-letter-box .cl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .cl-from p, .cl-to p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+  .cl-from strong, .cl-to strong { color: var(--text); font-weight: 700; display: block; margin-bottom: 0.3rem; }
+  .cl-body p { font-size: 0.95rem; line-height: 1.9; color: var(--text-muted); margin-bottom: 1.25rem; }
+  .cl-body p strong { color: var(--accent); }
+  .cl-sign { margin-top: 2rem; font-size: 0.95rem; color: var(--text-muted); }
+  .cl-sign strong { display: block; margin-top: 1rem; font-size: 1.1rem; color: var(--text); font-weight: 700; }
+
+  /* CONTACT */
+  #contact { text-align: center; }
+  .contact-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 4rem 3rem;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-box::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(ellipse at center, rgba(0,212,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .contact-box h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; }
+  .contact-box p { color: var(--text-muted); margin-bottom: 2rem; line-height: 1.7; }
+  .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  footer p { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); }
+  footer span { color: var(--accent); }
+
+  /* DIVIDER */
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    section { padding: 5rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-photo-col { order: -1; }
+    .headshot-wrapper { width: 160px; height: 160px; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .cover-letter-box { padding: 2rem 1.5rem; }
+    .cover-letter-box .cl-header { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">dev<span>.</span>portfolio<span>()</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#cover-letter">Cover Letter</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-text-col">
+      <div class="hero-tag">available for opportunities</div>
+      <h1 class="hero-name">
+        <span class="first">Robert<br></span>
+        <span class="last">Drynan</span>
+      </h1>
+      <p class="hero-title">Junior Software Developer &nbsp;/&nbsp; George Brown College</p>
+      <p class="hero-desc">Aspiring software developer with a strong foundation in cloud computing, full-stack development, and database management. Building scalable applications and leading teams — from the pool deck to the codebase.</p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">View My Work</a>
+        <a href="#contact" class="btn-outline">Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero-photo-col">
+      <div class="headshot-wrapper">
+        <div class="headshot-glow"></div>
+        <img src="images/headshot.jpg" alt="Robert Drynan"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header fade-in">
+    <span class="section-tag">Personal Data</span>
+    <h2 class="section-title">About Me</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text fade-in">
+      <p>
+        I'm a <strong>21-year-old computer programming student</strong> in my final semester at George Brown College, passionate about problem-solving, technology, and building things that work.
+      </p>
+      <p>
+        By day I manage a pool and a team of lifeguards and swim instructors as a <strong>Pool In Charge for the City of Toronto</strong> — an experience that has sharpened my communication, accountability, and leadership skills in ways no classroom can replicate.
+      </p>
+      <p>
+        I'm heading into tech with the goal of eventually <strong>leading a development team</strong>, bringing the same calm-under-pressure instincts I've built on the pool deck into the world of software.
+      </p>
+      <div class="interests-grid">
+        <span class="interest-tag">💻 Computers</span>
+        <span class="interest-tag">🏒 Hockey</span>
+        <span class="interest-tag">🏋️ Gym</span>
+        <span class="interest-tag">⛳ Golf</span>
+        <span class="interest-tag">🎣 Fishing</span>
+        <span class="interest-tag">🏕️ Camping</span>
+        <span class="interest-tag">🎸 Bass Guitar</span>
+        <span class="interest-tag">🎮 Video Games</span>
+      </div>
+    </div>
+    <div class="fade-in">
+      <div class="philosophy-box">
+        <p>
+          Every project I'm part of and every team I lead is a reflection of who I'm becoming. I'm driven by a need to widen my learning and understanding of things.
+        </p>
+        <p>
+          Managing a pool taught me that leadership isn't about authority. It's about knowing people, understanding their strengths, and building relationships built on trust. I carry that into development: write clean code, communicate clearly, and always leave things better than you found them.
+        </p>
+        <p>
+          The gym, the golf course, and the hockey rink all teach the same lesson — the more you put in, the more you get out. My goal is to grow into a developer and person who builds meaningful things and leads the kind of team I'd want to be part of.
+        </p>
+        <span class="attr">— Career Philosophy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-header fade-in">
+    <span class="section-tag">Technical Skills</span>
+    <h2 class="section-title">What I Work With</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card fade-in">
+      <div class="skill-card-title">Languages</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">C#</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">PHP</span>
+        <span class="skill-tag">C++</span>
+        <span class="skill-tag">SQL</span>
+        <span class="skill-tag">HTML</span>
+        <span class="skill-tag">CSS</span>
+        <span class="skill-tag">Swift</span>
+        <span class="skill-tag">Kotlin</span>
+      </div>
+    </div>
+    <div class="skill-card fade-in">
+      <div class="skill-card-title">Frameworks &amp; Tools</div>
+      <div class="skill-tags">
+        <span class="skill-tag">ASP.NET Core</span>
+        <span class="skill-tag">React</span>
+        <span class="skill-tag">JavaFX</span>
+        <span class="skill-tag">GraphQL</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">Git</span>
+      </div>
+    </div>
+    <div class="skill-card fade-in">
+      <div class="skill-card-title">Databases</div>
+      <div class="skill-tags">
+        <span class="skill-tag">PostgreSQL</span>
+        <span class="skill-tag">MySQL</span>
+        <span class="skill-tag">MongoDB</span>
+      </div>
+    </div>
+    <div class="skill-card fade-in">
+      <div class="skill-card-title">Dev Environment</div>
+      <div class="skill-tags">
+        <span class="skill-tag">VS Code</span>
+        <span class="skill-tag">JetBrains IDEs</span>
+        <span class="skill-tag">Xcode</span>
+        <span class="skill-tag">Android Studio</span>
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">Docker</span>
+      </div>
+    </div>
+    <div class="skill-card fade-in">
+      <div class="skill-card-title">Methodologies</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Agile</span>
+        <span class="skill-tag">SDLC</span>
+        <span class="skill-tag">Cloud Computing</span>
+        <span class="skill-tag">Database Management</span>
+        <span class="skill-tag">Network Security</span>
+      </div>
+    </div>
+    <div class="skill-card fade-in">
+      <div class="skill-card-title">Soft Skills</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Team Leadership</span>
+        <span class="skill-tag">Problem Solving</span>
+        <span class="skill-tag">Communication</span>
+        <span class="skill-tag">Report Writing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header fade-in">
+    <span class="section-tag">Professional Summary</span>
+    <h2 class="section-title">Work Experience</h2>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item fade-in">
+      <div class="timeline-date">June 2024 — Present</div>
+      <div class="timeline-role">Pool In Charge</div>
+      <div class="timeline-org">City of Toronto · Toronto, Ontario</div>
+      <ul class="timeline-bullets">
+        <li>Leads a team of lifeguards and swim instructors, managing scheduling and day-to-day facility operations</li>
+        <li>Maintains a safe, clean, and welcoming environment for all patrons</li>
+        <li>Produces detailed logs and operational reports for facility supervisors</li>
+      </ul>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="timeline-date">July 2022 — Present</div>
+      <div class="timeline-role">Lifeguard / Swim Instructor</div>
+      <div class="timeline-org">City of Toronto · Toronto, Ontario</div>
+      <ul class="timeline-bullets">
+        <li>Ensures the safety of all pool patrons and responds to emergency situations</li>
+        <li>Maintains facility safety standards and cleanliness protocols</li>
+        <li>Teaches swimming to individuals of all ages and skill levels</li>
+      </ul>
+    </div>
+    <div class="timeline-item fade-in">
+      <div class="timeline-date">Sept 2022 — Feb 2023</div>
+      <div class="timeline-role">Construction Crafts Apprentice</div>
+      <div class="timeline-org">Buttcon Limited · Toronto, Ontario</div>
+      <ul class="timeline-bullets">
+        <li>Assisted electricians, carpenters, plumbers, and sheet metal workers on active job sites</li>
+        <li>Developed hands-on problem-solving skills and strong teamwork in fast-paced environments</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-header fade-in">
+    <span class="section-tag">Academic Credentials</span>
+    <h2 class="section-title">Education</h2>
+  </div>
+  <div class="edu-grid fade-in">
+    <div class="edu-card">
+      <div class="edu-degree">Computer Programming and Analysis</div>
+      <div class="edu-school">George Brown College</div>
+      <div class="edu-date">September 2023 — Present (Final Semester)</div>
+      <div class="edu-badges">
+        <span class="badge">Dean's List Fall 2025</span>
+        <span class="badge">Dean's List 2024</span>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-degree">Ontario Secondary School Diploma</div>
+      <div class="edu-school">Monarch Park Collegiate</div>
+      <div class="edu-date">September 2018 — February 2023</div>
+      <div class="edu-badges">
+        <span class="badge">Ontario Scholar</span>
+        <span class="badge">Academic Achievement — Personal Fitness</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header fade-in">
+    <span class="section-tag">Academic Work Experience</span>
+    <h2 class="section-title">Academic Work Samples</h2>
+  </div>
+  <div class="projects-grid">
+
+    <div class="project-card fade-in">
+      <div class="project-num">PROJECT_01</div>
+      <div class="project-title">Clippex</div>
+      <p class="project-desc">
+        A team-built Android app that lets users paste any URL and download the audio or video in a format of their choosing directly to their device.
+      </p>
+      <div class="project-stack">
+        <span class="stack-tag">Kotlin</span>
+        <span class="stack-tag">Android</span>
+      </div>
+      <div class="project-footer">
+        <a href="https://github.com/GBC-Legends/clippex" target="_blank" class="btn-github">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-num">PROJECT_02</div>
+      <div class="project-title">GraphQL Employee Management API</div>
+      <p class="project-desc">
+        A backend system built with GraphQL that handles user registration, authentication, and full employee record management including photo uploads.
+      </p>
+      <div class="project-stack">
+        <span class="stack-tag">JavaScript</span>
+        <span class="stack-tag">GraphQL</span>
+        <span class="stack-tag">MongoDB</span>
+      </div>
+      <div class="project-footer">
+        <a href="https://github.com/robert-drynan/COMP3133_101460767_Assignment1" target="_blank" class="btn-github">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-num">PROJECT_03</div>
+      <div class="project-title">Real-Time Chat Application</div>
+      <p class="project-desc">
+        A WebSocket-powered chat app built under a 4-hour time constraint. Users can join rooms, send messages, and communicate in real time with no page refresh.
+      </p>
+      <div class="project-stack">
+        <span class="stack-tag">JavaScript</span>
+        <span class="stack-tag">WebSockets</span>
+        <span class="stack-tag">HTML</span>
+        <span class="stack-tag">CSS</span>
+      </div>
+      <div class="project-footer">
+        <a href="https://github.com/robert-drynan/101460767_lab_test1_chat_app" target="_blank" class="btn-github">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-num">PROJECT_04</div>
+      <div class="project-title">Shoppex</div>
+      <p class="project-desc">
+        An iOS budgeting app currently in development with a team. Lets users track everything they spend across categories to stay on top of their shopping budget.
+      </p>
+      <div class="project-stack">
+        <span class="stack-tag">Swift</span>
+        <span class="stack-tag">iOS</span>
+      </div>
+      <div class="project-footer">
+        <a href="https://github.com/GBC-Legends/Shoppex/tree/master" target="_blank" class="btn-github">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+
+    <div class="project-card fade-in">
+      <div class="project-num">PROJECT_05</div>
+      <div class="project-title">Other Notable Work</div>
+      <p class="project-desc">
+        Beyond the featured projects, coursework has included: network security analysis using Wireshark and PacketSender; an MVC application with login, email verification, and full CRUD project management; training neural networks on large datasets; and implementing sorting and searching algorithms from scratch.
+      </p>
+      <div class="project-stack">
+        <span class="stack-tag">Wireshark</span>
+        <span class="stack-tag">MVC</span>
+        <span class="stack-tag">Machine Learning</span>
+        <span class="stack-tag">Algorithms</span>
+      </div>
+      <div class="project-footer"></div>
+    </div>
+
+  </div>
+
+  <!-- CAPSTONE -->
+  <div class="section-header fade-in" style="margin-top: 5rem;">
+    <span class="section-tag">Capstone Project</span>
+    <h2 class="section-title">Capstone</h2>
+  </div>
+  <div class="capstone-card fade-in">
+    <div class="capstone-top">
+      <div>
+        <div class="project-num" style="margin-bottom:0.5rem;">CAPSTONE PROJECT</div>
+        <div class="project-title" style="font-size:1.5rem;">Process Manager 3 (PM3)</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-end;">
+        <div class="capstone-stack">
+          <span class="stack-tag">Rust</span>
+          <span class="stack-tag">JavaScript</span>
+          <span class="stack-tag">TypeScript</span>
+        </div>
+        <a href="https://github.com/robert-drynan" target="_blank" class="btn-github" style="align-self:flex-start;">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          Coming Soon on GitHub
+        </a>
+      </div>
+    </div>
+    <div class="capstone-sections">
+      <div class="capstone-section">
+        <div class="capstone-section-title">Project Summary</div>
+        <p>PM2 is the go-to process manager for running Linux applications, but it requires Node.js and npm — adding up to 450MB of overhead. This makes it impractical for micro servers, containers, and IoT devices. PM3 solves this by delivering the same reliability and ease of use at a fraction of the footprint, capable of running on servers with as little as 256MB of disk space.</p>
+      </div>
+      <div class="capstone-section">
+        <div class="capstone-section-title">Project Vision</div>
+        <p>To build a lightweight, open-source process manager that matches PM2's core functionality while eliminating its dependency overhead — making production-grade process management accessible on even the most resource-constrained hardware.</p>
+      </div>
+      <div class="capstone-section">
+        <div class="capstone-section-title">Project Documentation</div>
+        <p>Full project documentation is available, including: Business &amp; Project Requirements, Project Plan, Requirements Analysis &amp; Design, Wireframes / Mockups, Status Reports, and System Implementation details.</p>
+        <a href="https://1drv.ms/u/c/ba511cb729f3f0d1/IQD4iVXJvf61RI1QkmmHCZ-KAY4tCjeVOjc4drQabI9x-6E?e=Oh7SmO" target="_blank" class="btn-github" style="margin-top:1rem; display:inline-flex;">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+          View Documentation
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<div class="section-divider"></div>
+
+<!-- COVER LETTER -->
+<section id="cover-letter">
+  <div class="section-header fade-in">
+    <span class="section-tag">Application Material</span>
+    <h2 class="section-title">Cover Letter</h2>
+  </div>
+  <div class="cover-letter-box fade-in">
+    <div class="cl-header">
+      <div class="cl-from">
+        <strong>Robert Drynan</strong>
+        <p>Toronto, Ontario<br>
+        rddrynan@gmail.com<br>
+        https://www.linkedin.com/in/robert-drynan-2a84043b9/</p>
+      </div>
+      <div class="cl-to">
+        <strong>Hiring Manager</strong>
+        <p>Technology &amp; Development Team<br>
+        Toronto, Ontario</p>
+        <p style="margin-top:0.5rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-dim);">March 2026</p>
+      </div>
+    </div>
+    <div class="cl-body">
+      <p>Dear Hiring Manager,</p>
+      <p>
+        I am writing to express my interest in a <strong>Junior Software Developer</strong> position. As a final-semester Computer Programming and Analysis student at George Brown College — where I have earned Dean's List recognition 4 times — I am eager to bring my technical foundation and collaborative approach to a professional development team.
+      </p>
+      <p>
+        Throughout my program I have built and shipped projects across a range of domains: a GraphQL API with authentication and MongoDB persistence, an Android media downloader in Kotlin, a real-time WebSocket chat application delivered under a 4-hour constraint, and an iOS budgeting app currently in active development. My teams capstone project, PM3, is a Rust-based process manager designed to replace PM2 with a fraction of the disk footprint. These projects reflect hands-on experience across the full development lifecycle, from requirements through deployment.
+      </p>
+      <p>
+        Outside the classroom, I lead a team of lifeguards and swim instructors for the City of Toronto. Managing people in a safety-critical environment has sharpened skills that translate directly to software: clear communication, accountability under pressure, and a habit of leaving systems better than I found them. I work well in <strong>team environments</strong> and take ownership of my work from start to finish.
+      </p>
+      <p>
+        I am actively looking for a role where I can contribute from day one while continuing to grow alongside a strong team. I would welcome the opportunity to discuss how my background aligns with your needs. Thank you for your time and consideration.
+      </p>
+      <div class="cl-sign">
+        Best regards,
+        <strong>Robert Drynan</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header fade-in" style="text-align:center;">
+    <span class="section-tag" style="display:block; text-align:center;">Let's Connect</span>
+    <h2 class="section-title">Get In Touch</h2>
+  </div>
+  <div class="contact-box fade-in">
+    <h3>Open to Opportunities</h3>
+    <p>Looking for junior developer roles, internships, and co-op positions in software development and IT. Feel free to reach out.</p>
+    <div class="contact-links">
+      <a href="mailto:rddrynan@gmail.com" class="btn-primary">✉ Email Me</a>
+      <a href="https://www.linkedin.com/in/robert-drynan-2a84043b9/" class="btn-outline" target="_blank">LinkedIn</a>
+      <a href="https://github.com/robert-drynan" class="btn-outline" target="_blank">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Built with <span>HTML / CSS / JS</span> — Deployed on Vercel</p>
+  <p>© 2026 <span>Robert Drynan</span></p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (window.scrollY >= section.offsetTop - 120) current = section.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === `#${current}` ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
+</html>
